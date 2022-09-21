@@ -8,6 +8,7 @@ export default function Table() {
     const [visible, setVisible] = React.useState(false)
     const [shows, setShows] = React.useState("")
     const [btnText, setBtnText] = React.useState("Show My Movies and Shows")
+    const [editShowId, setEditShowId] = React.useState(null)
     const [addFormData, setAddFormData] = React.useState({
         show_id: '',
         type: '',
@@ -20,7 +21,19 @@ export default function Table() {
         duration: '',
         listed_in: ''
     })
-    const [editShowId, setEditShowId] = React.useState(null)
+    const [editFormData, setEditFormData] = React.useState({
+        show_id: '',
+        type: '',
+        title: '',
+        director: '',
+        country: '',
+        date_added: '',
+        release_year: '',
+        rating: '',
+        duration: '',
+        listed_in: ''
+    })
+
 
     const handleAddFormChange = (event) => {
         event.preventDefault()
@@ -31,6 +44,17 @@ export default function Table() {
         newFormData[fieldName] = fieldValue
 
         setAddFormData(newFormData)
+    }
+
+    const handleEditFormChange = (event) => {
+        event.preventDefault()
+        const fieldName = event.target.getAttribute("name")
+        const fieldValue = event.target.value
+
+        const newFormData = {...editFormData}
+        newFormData[fieldName] = fieldValue
+        
+        setEditFormData(newFormData)
     }
 
     const handleAddFormSubmit = (event) => {
@@ -57,11 +81,49 @@ export default function Table() {
 
     }
 
+    const handleEditFormSubmit = (event) => {
+        event.preventDefault()
+
+        const editedShow = {
+            show_id: editFormData.show_id,
+            type: editFormData.type,
+            title: editFormData.title,
+            director: editFormData.director,
+            country: editFormData.country,
+            date_added: editFormData.date_added,
+            release_year: editFormData.release_year,
+            rating: editFormData.rating,
+            duration: editFormData.duration,
+            listed_in: editFormData.listed_in
+        }
+
+        const newShows = [...shows]
+
+        const index = shows.findIndex((show) => show.show_id === editShowId)
+
+        newShows[index] = editedShow
+        setShows(newShows)
+        setEditShowId(null)
+    }
+
     const handleEditClick = (event, show) => {
         event.preventDefault()
-        console.log(event)
-        console.log(show)
         setEditShowId(show.show_id)
+
+        const formValues = {
+            show_id: show.show_id,
+            type: show.type,
+            title: show.title,
+            director: show.director,
+            country: show.country,
+            date_added: show.date_added,
+            release_year: show.release_year,
+            rating: show.rating,
+            duration: show.duration,
+            listed_in: show.listed_in
+        }
+
+        setEditFormData(formValues)
     }
 
 
@@ -79,7 +141,7 @@ export default function Table() {
         const { data } = await supabase
             .from("Netflix")
             .select()
-            .limit(10)
+            .limit(5)
         setShows(data)
     }
 
@@ -95,12 +157,15 @@ export default function Table() {
         LoadShowsFromSupabase()
     }, [])
 
+    const handleCancelClick = () => {
+        setEditShowId(null)
+    }
 
     return (
         <div>
             <button onClick={handleVisible}>{btnText}</button>
             {visible && <div className="table-container">
-                <form>
+                <form onSubmit={handleEditFormSubmit}>
                     <table>
                         <thead>
                             <tr>
@@ -120,7 +185,16 @@ export default function Table() {
                         <tbody>
                             {shows.map((show) => (
                                 <>
-                                    {editShowId === show.show_id ? <EditableRow/> : <ReadOnlyRow show={show} handleEditClick={handleEditClick}/>}
+                                    {editShowId === show.show_id ? 
+                                    (<EditableRow 
+                                    editFormData={editFormData} 
+                                    handleEditFormChange={handleEditFormChange}
+                                    handleCancelClick={handleCancelClick}
+                                    />) : 
+                                    (<ReadOnlyRow 
+                                    show={show} 
+                                    handleEditClick={handleEditClick}
+                                    />)}
                                 </>
                             ))}
                             
