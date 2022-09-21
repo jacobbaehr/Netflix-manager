@@ -1,10 +1,12 @@
 import React from "react"
 import { supabase } from "../client"
+import ReadOnlyRow from "./ReadOnlyRow"
+import EditableRow from "./EditableRow"
 
 export default function Table() {
 
-    const [show, setShow] = React.useState(false)
-    const [movies, setMovies] = React.useState("")
+    const [visible, setVisible] = React.useState(false)
+    const [shows, setShows] = React.useState("")
     const [btnText, setBtnText] = React.useState("Show My Movies and Shows")
     const [addFormData, setAddFormData] = React.useState({
         show_id: '',
@@ -18,10 +20,11 @@ export default function Table() {
         duration: '',
         listed_in: ''
     })
+    const [editShowId, setEditShowId] = React.useState(null)
 
     const handleAddFormChange = (event) => {
         event.preventDefault()
-        const fieldName = event.target.getAttribute('name')
+        const fieldName = event.target.getAttribute('n ame')
         const fieldValue = event.target.value
 
         const newFormData = {...addFormData}
@@ -45,79 +48,97 @@ export default function Table() {
             duration: addFormData.duration,
             listed_in: addFormData.listed_in
         }
+
+        const newShows = [...shows, newShow]
+        setShows(newShows)
+
+        // update database
+        addShowToSupabase(newShow)
+
+    }
+
+    const handleEditClick = (event, show) => {
+        event.preventDefault()
+        console.log(event)
+        console.log(show)
+        setEditShowId(show.show_id)
     }
 
 
-    function handleShow() {
-        setShow(prevShow => !prevShow)
+    function handleVisible() {
+        setVisible(prevVisible => !prevVisible)
         setBtnText(() => {
             return (
-                show ? "Show My Movies and Shows" : "Hide My Movies and Shows"
+                visible ? "Show My Movies and Shows" : "Hide My Movies and Shows"
             )
         })
 
     }
 
+    async function LoadShowsFromSupabase() {
+        const { data } = await supabase
+            .from("Netflix")
+            .select()
+            .limit(10)
+        setShows(data)
+    }
+
+    async function addShowToSupabase(show) {
+        console.log(show)
+        await supabase
+            .from("Netflix")
+            .insert([show])
+
+    }
+
     React.useEffect(() => {
-        const LoadShows = async () => {
-            const { data, error } = await supabase
-                .from('Netflix')
-                .select()
-            setMovies(data)
-        }
-        LoadShows()
+        LoadShowsFromSupabase()
     }, [])
 
 
     return (
         <div>
-            <button onClick={handleShow}>{btnText}</button>
-            {show && <div className="table-container">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>show id</th>
-                            <th>type</th>
-                            <th>title</th>
-                            <th>director</th>
-                            <th>country</th>
-                            <th>date added</th>
-                            <th>release year</th>
-                            <th>rating</th>
-                            <th>duration</th>
-                            <th>listed in</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {movies.map((movie) => (
-                            <tr>
-                                <td>{movie.show_id}</td>
-                                <td>{movie.type}</td>
-                                <td>{movie.title}</td>
-                                <td>{movie.director}</td>
-                                <td>{movie.country}</td>
-                                <td>{movie.date_added}</td>
-                                <td>{movie.release_year}</td>
-                                <td>{movie.rating}</td>
-                                <td>{movie.duration}</td>
-                                <td>{movie.listed_in}</td>
-                            </tr>
-                        ))}
-                        
-                    </tbody>
-                </table>
-                <h2>Add a Movie or Show</h2>
+            <button onClick={handleVisible}>{btnText}</button>
+            {visible && <div className="table-container">
                 <form>
-                    <input type="text" onChange={handleAddFormChange} name="show_id" required="required" placeholder="Enter a show_id"></input>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>show id</th>
+                                <th>type</th>
+                                <th>title</th>
+                                <th>director</th>
+                                <th>country</th>
+                                <th>date added</th>
+                                <th>release year</th>
+                                <th>rating</th>
+                                <th>duration</th>
+                                <th>listed in</th>
+                                <th>actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {shows.map((show) => (
+                                <>
+                                    {editShowId === show.show_id ? <EditableRow/> : <ReadOnlyRow show={show} handleEditClick={handleEditClick}/>}
+                                </>
+                            ))}
+                            
+                        </tbody>
+                    </table>
+                </form>
+                <h2>Add a Movie or Show</h2>
+                <form onSubmit={handleAddFormSubmit }>
+                    <input type="text" onChange={handleAddFormChange} name="show_id" required="required" placeholder="Enter a show id"></input>
                     <input type="text" onChange={handleAddFormChange} name="type" required="required" placeholder="Enter a type"></input>
                     <input type="text" onChange={handleAddFormChange} name="title" required="required" placeholder="Enter a title"></input>
                     <input type="text" onChange={handleAddFormChange} name="director" required="required" placeholder="Enter a director"></input>
                     <input type="text" onChange={handleAddFormChange} name="country" required="required" placeholder="Enter a country"></input>
-                    <input type="text" onChange={handleAddFormChange} name="date_added" required="required" placeholder="Enter a date_added"></input>
-                    <input type="text" onChange={handleAddFormChange} name="release_year" required="required" placeholder="Enter a release_year"></input>
-                    <input type="text" onChange={handleAddFormChange} name="ra ting" required="required" placeholder="Enter a rating"></input>
+                    <input type="text" onChange={handleAddFormChange} name="date_added" required="required" placeholder="Enter a date added"></input>
+                    <input type="text" onChange={handleAddFormChange} name="release_year" required="required" placeholder="Enter a release year"></input>
+                    <input type="text" onChange={handleAddFormChange} name="rating" required="required" placeholder="Enter a rating"></input>
                     <input type="text" onChange={handleAddFormChange} name="duration" required="required" placeholder="Enter a duration"></input>
-                    <input type="text" onChange={handleAddFormChange} name="listed_in" required="required" placeholder="Enter a listed_in"></input>
+                    <input type="text" onChange={handleAddFormChange} name="listed_in" required="required" placeholder="Enter a listed in"></input>
                     <button type="submit">Add</button>
                 </form>
             </div>}
