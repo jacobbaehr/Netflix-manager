@@ -167,6 +167,14 @@ export default function Table() {
             .match({show_id: show.show_id})
     }
 
+    async function deleteShowOnSupabase(show) {
+        console.log(show)
+        await supabase
+            .from("Netflix")
+            .delete()
+            .match({show_id: show.show_id})
+    }
+
     React.useEffect(() => {
         LoadShowsFromSupabase()
     }, [])
@@ -178,6 +186,10 @@ export default function Table() {
     const handleDeleteClick = (show_id) => {
         const newShows = [...shows]
         const index = shows.findIndex(show => show.show_id === show_id)
+
+        // update database
+        deleteShowOnSupabase(newShows[index])
+
         newShows.splice(index, 1)
         setShows(newShows)
     }
