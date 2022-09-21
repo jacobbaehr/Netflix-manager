@@ -37,7 +37,7 @@ export default function Table() {
 
     const handleAddFormChange = (event) => {
         event.preventDefault()
-        const fieldName = event.target.getAttribute('n ame')
+        const fieldName = event.target.getAttribute('name')
         const fieldValue = event.target.value
 
         const newFormData = {...addFormData}
@@ -74,6 +74,8 @@ export default function Table() {
         }
 
         const newShows = [...shows, newShow]
+        console.log(shows)
+        console.log(newShows)
         setShows(newShows)
 
         // update database
@@ -103,6 +105,10 @@ export default function Table() {
 
         newShows[index] = editedShow
         setShows(newShows)
+
+        //update database
+        updateShowOnSupabase(editedShow)
+
         setEditShowId(null)
     }
 
@@ -153,6 +159,14 @@ export default function Table() {
 
     }
 
+    async function updateShowOnSupabase(show) {
+        console.log(show)
+        await supabase
+            .from("Netflix")
+            .update(show)
+            .match({show_id: show.show_id})
+    }
+
     React.useEffect(() => {
         LoadShowsFromSupabase()
     }, [])
@@ -161,9 +175,16 @@ export default function Table() {
         setEditShowId(null)
     }
 
+    const handleDeleteClick = (show_id) => {
+        const newShows = [...shows]
+        const index = shows.findIndex(show => show.show_id === show_id)
+        newShows.splice(index, 1)
+        setShows(newShows)
+    }
+
     return (
         <div>
-            <button onClick={handleVisible}>{btnText}</button>
+            <button className="showTableBtn" onClick={handleVisible}>{btnText}</button>
             {visible && <div className="table-container">
                 <form onSubmit={handleEditFormSubmit}>
                     <table>
@@ -194,6 +215,7 @@ export default function Table() {
                                     (<ReadOnlyRow 
                                     show={show} 
                                     handleEditClick={handleEditClick}
+                                    handleDeleteClick={handleDeleteClick }
                                     />)}
                                 </>
                             ))}
@@ -201,7 +223,7 @@ export default function Table() {
                         </tbody>
                     </table>
                 </form>
-                <h2>Add a Movie or Show</h2>
+                <h3>Add a Movie or Show</h3>
                 <form onSubmit={handleAddFormSubmit }>
                     <input type="text" onChange={handleAddFormChange} name="show_id" required="required" placeholder="Enter a show id"></input>
                     <input type="text" onChange={handleAddFormChange} name="type" required="required" placeholder="Enter a type"></input>
