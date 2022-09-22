@@ -196,6 +196,7 @@ export default function Table() {
 
     return (
         <div>
+            <h1 className="slogan">Manage your Netflix shows right here!</h1>
             <button className="showTableBtn" onClick={handleVisible}>{btnText}</button>
             {visible && <div className="table-container">
                 <form onSubmit={handleEditFormSubmit}>
@@ -236,18 +237,18 @@ export default function Table() {
                     </table>
                 </form>
                 <h3>Add a Movie or Show</h3>
-                <form onSubmit={handleAddFormSubmit }>
-                    <input type="text" onChange={handleAddFormChange} name="show_id" required="required" placeholder="Enter a show id"></input>
-                    <input type="text" onChange={handleAddFormChange} name="type" required="required" placeholder="Enter a type"></input>
-                    <input type="text" onChange={handleAddFormChange} name="title" required="required" placeholder="Enter a title"></input>
-                    <input type="text" onChange={handleAddFormChange} name="director" required="required" placeholder="Enter a director"></input>
-                    <input type="text" onChange={handleAddFormChange} name="country" required="required" placeholder="Enter a country"></input>
-                    <input type="text" onChange={handleAddFormChange} name="date_added" required="required" placeholder="Enter a date added"></input>
-                    <input type="text" onChange={handleAddFormChange} name="release_year" required="required" placeholder="Enter a release year"></input>
-                    <input type="text" onChange={handleAddFormChange} name="rating" required="required" placeholder="Enter a rating"></input>
-                    <input type="text" onChange={handleAddFormChange} name="duration" required="required" placeholder="Enter a duration"></input>
-                    <input type="text" onChange={handleAddFormChange} name="listed_in" required="required" placeholder="Enter a listed in"></input>
-                    <button type="submit">Add</button>
+                <form className="newRecord"onSubmit={handleAddFormSubmit }>
+                    <input size={"Enter a show id".length} type="text" onChange={handleAddFormChange} name="show_id" required="required" placeholder="Enter a show id"></input>
+                    <input size={"Enter a type".length} type="text" onChange={handleAddFormChange} name="type" required="required" placeholder="Enter a type"></input>
+                    <input size={"Enter a title".length} type="text" onChange={handleAddFormChange} name="title" required="required" placeholder="Enter a title"></input>
+                    <input size={"Enter a director".length} type="text" onChange={handleAddFormChange} name="director" required="required" placeholder="Enter a director"></input>
+                    <input size={"Enter a country".length} type="text" onChange={handleAddFormChange} name="country" required="required" placeholder="Enter a country"></input>
+                    <input size={"Enter a date added".length} type="text" onChange={handleAddFormChange} name="date_added" required="required" placeholder="Enter a date added"></input>
+                    <input size={"Enter a release year".length} type="text" onChange={handleAddFormChange} name="release_year" required="required" placeholder="Enter a release year"></input>
+                    <input size={"Enter a rating".length} type="text" onChange={handleAddFormChange} name="rating" required="required" placeholder="Enter a rating"></input>
+                    <input size={"Enter a duration".length} type="text" onChange={handleAddFormChange} name="duration" required="required" placeholder="Enter a duration"></input>
+                    <input size={"Enter a listed in".length} type="text" onChange={handleAddFormChange} name="listed_in" required="required" placeholder="Enter a listed in"></input>
+                    <button className="addBtn" type="submit">Add</button>
                 </form>
             </div>}
         </div>

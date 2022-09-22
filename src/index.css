@@ -3,9 +3,44 @@ body {
   font-family: 'Roboto', sans-serif;
 }
 
+.slogan {
+  margin-left: 36px;
+}
+
 .showTableBtn {
   margin-top: 50px;
   margin-left: 36px;
+  background-color: lightgray;
+  border: none;
+  border-radius: 10px;
+  color: black;
+  padding: 10px;
+  cursor: pointer;
+}
+
+.addBtn {
+  padding: 7px 10px;
+  margin-left: 5px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.addBtn:hover {
+  background-color: green;
+  color: #F6FDF1;
+}
+
+.edtBtn, .dltBtn {
+  border: none;
+  border-radius: 5px;
+  padding: 5px;
+  cursor: pointer;
+}
+
+.dltBtn:hover {
+  background-color: red;
+  color: whitesmoke;
 }
 
 nav {
@@ -17,14 +52,15 @@ nav {
 }
 
 .table-container {
-  gap: 30px;
+  gap: 10px;
   padding-top: 30px;
   margin-left: 36px;
 }
 
 input {
-  box-sizing: border-box;
   font-size: 16px;
+  margin-left: 0;
+  margin-right: 5px;
 }
 
 table {
@@ -37,14 +73,16 @@ td {
   border: 1px solid #ffffff;
   text-align: left;
   padding: 8px;
+  color: green;
 }
 
 th {
-  background-color: rgb(117, 201, 250);
+  background-color: green;
+  color: #F6FDF1;
 }
 
 td {
-  background-color: rgb(205, 235, 253);
+  background-color: #F6FDF1;
 }
 
 form {
@@ -56,6 +94,10 @@ form {
 form td:last-child {
   display: flex;
   justify-content: space-evenly;
+}
+
+.newRecord {
+  display: block;
 }
 
 .dark-theme {

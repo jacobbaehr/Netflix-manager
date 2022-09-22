@@ -14,8 +14,8 @@ const ReadOnlyRow = ({ show, handleEditClick, handleDeleteClick }) => {
             <td>{show.duration}</td>
             <td>{show.listed_in}</td>
             <td>
-                <button type="button" onClick={(event) => handleEditClick(event, show)}>Edit</button>
-                <button type="button" onClick={(event) => handleDeleteClick(show.show_id)}>Delete</button>
+                <button className="edtBtn" type="button" onClick={(event) => handleEditClick(event, show)}>Edit</button>
+                <button className="dltBtn" type="button" onClick={(event) => handleDeleteClick(show.show_id)}>Delete</button>
             </td>
         </tr>
     )
