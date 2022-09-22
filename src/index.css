@@ -43,6 +43,11 @@ body {
   color: whitesmoke;
 }
 
+.edtBtn:hover {
+  background-color: orange;
+  color: whitesmoke;
+}
+
 nav {
   height: 70px;
   display: flex;
